@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Malayalam IPTV - Fast Streaming</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: #0f0f1e;
+            color: #fff;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        /* Login Modal */
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(20px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .login-modal.active {
+            display: flex;
+        }
+
+        .login-box {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 40px 30px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 15px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f0f1e;
+            z-index: 3000;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(0,0,0,0.3);
+            overflow-x: auto;
+            flex-wrap: wrap;
+        }
+
+        .admin-tab {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 13px;
+        }
+
+        .admin-tab.active {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        }
+
+        .admin-content {
+            padding: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .admin-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .admin-card h3 {
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .admin-input {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .admin-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .admin-btn-small {
+            padding: 4px 10px;
+            font-size: 11px;
+        }
+
+        .playlist-item {
+            background: rgba(255,255,255,0.08);
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 11px;
+        }
+
+        .status-enabled {
+            background: rgba(76,175,80,0.3);
+            color: #4CAF50;
+        }
+
+        .status-disabled {
+            background: rgba(244,67,54,0.3);
+            color: #f44336;
+        }
+
+        .admin-channels-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .admin-channel-item {
+            background: rgba(255,255,255,0.08);
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: rgba(15, 15, 30, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1001;
+            transition: left 0.3s ease;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .menu-item {
+            padding: 12px 15px;
+            margin: 5px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+
+        .menu-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Main Structures */
+        .menu-bar {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .menu-icon, .user-icon, .admin-icon {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 10px;
+        }
+
+        .search-bar {
+            padding: 10px 16px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 8px 15px;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 25px;
+            color: white;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .categories-bar {
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.2);
+            overflow-x: auto;
+            white-space: nowrap;
+            display: flex;
+            gap: 6px;
+        }
+
+        .category-chip {
+            padding: 6px 14px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 12px;
+        }
+
+        .category-chip.active {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        }
+
+        .tab-bar {
+            display: flex;
+            padding: 8px 12px;
+            gap: 8px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 8px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .tab.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        /* Container View Frames */
+        .panel {
+            display: none;
+            height: calc(100vh - 190px);
+            overflow-y: auto;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            padding: 12px;
+        }
+
+        .channel-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 10px 8px;
+            cursor: pointer;
+            text-align: center;
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .channel-card:active {
+            transform: scale(0.97);
+        }
+
+        .channel-card .fav-star {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .channel-logo {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 6px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .channel-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .channel-logo-wrapper {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 6px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            overflow: hidden;
+        }
+
+        .channel-logo-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .channel-name {
+            font-size: 11px;
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Loading Spinner */
+        .loading-trigger {
+            text-align: center;
+            padding: 20px;
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-top-color: #ee5a24;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Video Player Layer */
+        .player-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #000;
+            z-index: 100;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+        }
+
+        .player-container.open {
+            transform: translateY(0);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .close-player {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.6);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .loading-state, .empty-state {
+            text-align: center;
+            padding: 40px;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 600px) {
+            .channels-grid {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+                gap: 8px;
+                padding: 8px;
+            }
+            .channel-card {
+                padding: 8px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-modal" id="loginModal">
+        <div class="close-modal" onclick="closeLoginModal()">✕</div>
+        <div class="login-box">
+            <div class="login-header">
+                <div class="login-icon">📺</div>
+                <h2>Malayalam IPTV</h2>
+                <p>Enter your credentials</p>
+            </div>
+            <div class="input-group">
+                <input type="text" id="loginUsername" placeholder="Username">
+            </div>
+            <div class="input-group">
+                <input type="password" id="loginPassword" placeholder="Password">
+            </div>
+            <button class="login-btn" onclick="handleUserLogin()">Login</button>
+        </div>
+    </div>
+
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h2>Admin Dashboard</h2>
+            <button class="admin-btn" onclick="closeAdminPanel()">Close</button>
+        </div>
+        <div class="admin-tabs">
+            <button class="admin-tab active" onclick="showAdminTab('playlists')">📋 Playlists</button>
+            <button class="admin-tab" onclick="showAdminTab('channels')">📺 Channels</button>
+            <button class="admin-tab" onclick="showAdminTab('deleted')">🗑️ Deleted</button>
+            <button class="admin-tab" onclick="showAdminTab('categories')">🏷️ Categories</button>
+            <button class="admin-tab" onclick="showAdminTab('users')">👥 Users</button>
+        </div>
+        <div class="admin-content">
+            <div id="playlistsTab" class="admin-tab-content">
+                <div class="admin-card">
+                    <h3>➕ Add New Playlist</h3>
+                    <select id="playlistType" class="admin-input">
+                        <option value="m3u">M3U Playlist URL</option>
+                        <option value="xtream">Xtream Codes</option>
+                        <option value="mag">MAG Portal</option>
+                    </select>
+                    <div id="m3uAdd">
+                        <input type="text" id="newPlaylistUrl" class="admin-input" placeholder="Playlist URL">
+                    </div>
+                    <div id="xtreamAdd" style="display:none;">
+                        <input type="text" id="xtreamServer" class="admin-input" placeholder="Server URL">
+                        <input type="text" id="xtreamUser" class="admin-input" placeholder="Username">
+                        <input type="text" id="xtreamPass" class="admin-input" placeholder="Password">
+                    </div>
+                    <div id="magAdd" style="display:none;">
+                        <input type="text" id="magPortalUrl" class="admin-input" placeholder="MAG Portal URL">
+                        <input type="text" id="magMac" class="admin-input" placeholder="MAC Address (optional)">
+                    </div>
+                    <input type="text" id="newPlaylistName" class="admin-input" placeholder="Playlist Name">
+                    <button class="admin-btn" onclick="addPlaylist()">Add Playlist</button>
+                </div>
+
+                <div class="admin-card">
+                    <h3>📋 Registered Playlists</h3>
+                    <p style="font-size:11px; opacity:0.7; margin-bottom:10px;">Note: You can turn on multiple playlists at the same time to view all channels combined.</p>
+                    <div id="playlistsList"></div>
+                </div>
+            </div>
+
+            <div id="channelsTab" class="admin-tab-content" style="display:none;">
+                <div class="admin-card">
+                    <h3>📺 All Channels</h3>
+                    <input type="text" id="adminChannelSearch" class="admin-input" placeholder="Search channels..." onkeyup="searchAdminChannels()">
+                    <div id="adminChannelsStats" style="font-size: 12px; margin-bottom: 10px;"></div>
+                    <div id="adminChannelsList" class="admin-channels-container"></div>
+                    <div id="adminChannelsPagination" style="display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap;"></div>
+                </div>
+            </div>
+
+            <div id="deletedTab" class="admin-tab-content" style="display:none;">
+                <div class="admin-card">
+                    <h3>🗑️ Deleted Channels</h3>
+                    <div id="deletedChannelsList"></div>
+                </div>
+            </div>
+
+            <div id="categoriesTab" class="admin-tab-content" style="display:none;">
+                <div class="admin-card">
+                    <h3>🏷️ Manage Categories</h3>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <input type="text" id="newCategoryName" class="admin-input" placeholder="New Category" style="flex:1">
+                        <button class="admin-btn" onclick="addNewCategory()">Add</button>
+                    </div>
+                    <div id="adminCategoriesList" style="margin-top: 12px;"></div>
+                </div>
+            </div>
+
+            <div id="usersTab" class="admin-tab-content" style="display:none;">
+                <div class="admin-card">
+                    <h3>👥 User Management</h3>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <input type="text" id="newUserName" class="admin-input" placeholder="Username" style="flex:1">
+                        <input type="password" id="newUserPass" class="admin-input" placeholder="Password" style="flex:1">
+                        <button class="admin-btn" onclick="addNewUser()">Add User</button>
+                    </div>
+                    <div id="adminUsersList" style="margin-top: 12px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container" id="appContainer">
+        <div class="menu-bar">
+            <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+            <div class="app-title-menu">Malayalam IPTV</div>
+            <div style="display: flex; gap: 8px;">
+                <div class="admin-icon" id="adminIcon" style="display: none;" onclick="openAdminPanel()">⚙️</div>
+                <div class="user-icon" id="userIconBtn" onclick="openLoginModal()">👤</div>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="🔍 Search channels...">
+        </div>
+
+        <div class="categories-bar" id="categoriesBar"></div>
+
+        <div class="tab-bar">
+            <button class="tab active" onclick="switchTab('channels')">📺 All Channels</button>
+            <button class="tab" onclick="switchTab('favorites')">⭐ Favorites</button>
+        </div>
+
+        <div id="channelsPanel" class="panel active">
+            <div id="channelsGrid" class="channels-grid">
+                <div class="loading-state">Loading channels...</div>
+            </div>
+        </div>
+
+        <div id="favoritesPanel" class="panel">
+            <div id="favoritesGrid" class="channels-grid">
+                <div class="empty-state">No favorites yet</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="player-container" id="playerContainer">
+        <div class="close-player" onclick="closePlayer()">✕</div>
+        <div class="video-wrapper">
+            <video id="videoPlayer" controls>
+                <source id="videoSource" src="">
+            </video>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="menu-item" onclick="navigateTo('channels')">📺 All Channels</div>
+        <div class="menu-item" onclick="navigateTo('favorites')">⭐ My Favorites</div>
+        <div class="menu-item" id="adminMenuItem" style="display: none;" onclick="openAdminPanel()">⚙️ Admin Panel</div>
+        <div class="menu-item" id="loginMenuItem" onclick="openLoginModal()">🔑 Login</div>
+        <div class="menu-item" id="logoutMenuItem" style="display: none;" onclick="logout()">🚪 Logout</div>
+    </div>
+
+    <script>
+        // Storage Configuration initialization parsing parameters
+        let playlists = JSON.parse(localStorage.getItem('iptv_playlists') || '[{"id":"default","name":"Malayalam Channels","type":"m3u","url":"https://rugroqhscotubmdlckfm.supabase.co/storage/v1/object/public/IPTV/Unconfirmed%20481893.crdownload","enabled":true}]');
+        let allChannels = JSON.parse(localStorage.getItem('iptv_all_channels') || '[]');
+        let deletedChannels = JSON.parse(localStorage.getItem('iptv_deleted_channels') || '[]');
+        let categories = JSON.parse(localStorage.getItem('iptv_categories') || '["All"]');
+        
+        // Updated admin user initialization matching your requirements
+        let users = JSON.parse(localStorage.getItem('iptv_users') || '[{"username":"admin1","password":"5787","isAdmin":true},{"username":"guest","password":"guest","isAdmin":false}]');
+        let currentUser = JSON.parse(localStorage.getItem('iptv_current_user') || '{"username":"guest","isAdmin":false}');
+        let favorites = [];
+        let currentChannel = null;
+        let currentCategory = "All";
+        
+        // Infinite dynamic viewport tracking variables
+        let displayedChannels = [];
+        let currentMainPage = 0;
+        const MAIN_PAGE_SIZE = 24;
+        let isLoadingMain = false;
+        let hasMoreMain = true;
+        let mainScrollContainer = null;
+        
+        // Admin grid processing indexes
+        let adminCurrentPage = 1;
+        let adminTotalPages = 1;
+        let adminFilteredChannels = [];
+        const ADMIN_PAGE_SIZE = 30;
+
+        function init() {
+            // Check if local storage already has user data and update it if the user was the old admin configuration
+            syncLocalStorageAdminCredentials();
+            updateAuthUI();
+            loadCategories();
+            loadChannels();
+            loadFavorites();
+            setupInfiniteScroll();
+        }
+
+        // Ensures old cache data updates dynamically to your new setup values
+        function syncLocalStorageAdminCredentials() {
+            let existingUsers = localStorage.getItem('iptv_users');
+            if (existingUsers) {
+                try {
+                    let parsedUsers = JSON.parse(existingUsers);
+                    let adminIdx = parsedUsers.findIndex(u => u.isAdmin === true);
+                    if (adminIdx !== -1) {
+                        parsedUsers[adminIdx].username = "admin1";
+                        parsedUsers[adminIdx].password = "5787";
+                    } else {
+                        parsedUsers.unshift({"username":"admin1","password":"5787","isAdmin":true});
+                    }
+                    localStorage.setItem('iptv_users', JSON.stringify(parsedUsers));
+                    users = parsedUsers;
+                } catch(e) { console.error(e); }
+            } else {
+                localStorage.setItem('iptv_users', JSON.stringify(users));
+            }
+            
+            // If logged in as the admin, clear current session to force sign-in with new parameters safely
+            if (currentUser && currentUser.isAdmin) {
+                currentUser = { username: 'guest', isAdmin: false };
+                localStorage.setItem('iptv_current_user', JSON.stringify(currentUser));
+            }
+        }
+
+        function setupInfiniteScroll() {
+            mainScrollContainer = document.querySelector('#channelsPanel');
+            if (mainScrollContainer) {
+                mainScrollContainer.addEventListener('scroll', handleMainScroll);
+            }
+        }
+
+        function handleMainScroll() {
+            if (!mainScrollContainer || isLoadingMain || !hasMoreMain) return;
+            
+            const scrollTop = mainScrollContainer.scrollTop;
+            const scrollHeight = mainScrollContainer.scrollHeight;
+            const clientHeight = mainScrollContainer.clientHeight;
+            
+            if (scrollTop + clientHeight >= scrollHeight - 75) {
+                loadMoreMainChannels();
+            }
+        }
+
+        async function loadChannels() {
+            const activePlaylists = playlists.filter(p => p.enabled);
+            if (activePlaylists.length === 0) {
+                allChannels = [];
+                localStorage.setItem('iptv_all_channels', JSON.stringify([]));
+                document.getElementById('channelsGrid').innerHTML = '<div class="empty-state">No active playlist. Enable playlists inside the Admin Panel.</div>';
+                return;
+            }
+
+            const activeIds = activePlaylists.map(p => p.id);
+            const hasStaleCache = allChannels.length > 0 && !allChannels.every(c => activeIds.includes(c.playlistId));
+            
+            if (hasStaleCache) {
+                allChannels = [];
+                localStorage.setItem('iptv_all_channels', JSON.stringify([]));
+            }
+
+            if (allChannels.length > 0) {
+                resetMainDisplay();
+                return;
+            }
+
+            document.getElementById('channelsGrid').innerHTML = '<div class="loading-state"><div class="spinner"></div><p style="margin-top:10px;">Parsing multi-playlist channel logs...</p></div>';
+            
+            let aggregatedChannels = [];
+            
+            for (const pl of activePlaylists) {
+                try {
+                    let playlistChannels = [];
+                    if (pl.type === 'm3u') {
+                        const response = await fetch(pl.url);
+                        const content = await response.text();
+                        playlistChannels = parseM3U(content, pl.id);
+                    } else if (pl.type === 'xtream') {
+                        const url = `${pl.server}/player_api.php?username=${pl.username}&password=${pl.password}`;
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        playlistChannels = parseXtream(data, pl.id);
+                    } else if (pl.type === 'mag') {
+                        playlistChannels = await parseMAG(pl);
+                    }
+                    aggregatedChannels = aggregatedChannels.concat(playlistChannels);
+                } catch (error) {
+                    console.error(`Error processing setup line on playlist ${pl.name}:`, error);
+                }
+            }
+            
+            allChannels = aggregatedChannels;
+            localStorage.setItem('iptv_all_channels', JSON.stringify(allChannels));
+            
+            currentCategory = "All";
+            resetMainDisplay();
+            updateCategoriesFromChannels();
+        }
+
+        async function parseMAG(magConfig) {
+            const channels = [];
+            try {
+                const portalUrl = magConfig.portalUrl;
+                const mac = magConfig.mac || '00:1A:79:00:00:00';
+                const response = await fetch(`${portalUrl}/server/load.php?type=itv&mac=${mac}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.itv) {
+                        data.itv.forEach((channel, index) => {
+                            channels.push({
+                                id: 'mag_' + magConfig.id + '_' + index + '_' + (channel.id || index),
+                                name: channel.name || 'Unknown',
+                                logo: channel.logo || null,
+                                group: channel.cmd || 'General',
+                                category: channel.cmd || 'General',
+                                url: `${portalUrl}/live/${mac}/${channel.id}.ts`,
+                                playlistId: magConfig.id,
+                                enabled: true
+                            });
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('MAG parse layout error:', error);
+            }
+            return channels;
+        }
+
+        function parseM3U(content, playlistId) {
+            const lines = content.split('\n');
+            const channels = [];
+            let currentChan = null;
+            let channelIndexCounter = 0;
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (line.startsWith('#EXTINF:')) {
+                    const match = line.match(/#EXTINF:.*?,\s*(.+)/);
+                    const name = match ? match[1] : 'Unknown';
+                    const logoMatch = line.match(/tvg-logo="([^"]*)"/);
+                    const logo = logoMatch ? logoMatch[1] : null;
+                    const groupMatch = line.match(/group-title="([^"]*)"/);
+                    const group = groupMatch ? groupMatch[1] : 'General';
+                    
+                    channelIndexCounter++;
+                    currentChan = { 
+                        id: 'chan_' + playlistId + '_' + channelIndexCounter + '_' + i, 
+                        name, 
+                        logo, 
+                        group, 
+                        url: null, 
+                        playlistId, 
+                        enabled: true, 
+                        category: group.trim() 
+                    };
+                } else if (line && !line.startsWith('#') && currentChan) {
+                    currentChan.url = line;
+                    if (currentChan.url && currentChan.url.startsWith('http')) {
+                        channels.push(currentChan);
+                    }
+                    currentChan = null;
+                }
+            }
+            return channels;
+        }
+
+        function parseXtream(data, playlistId) {
+            const channels = [];
+            let xtreamCounter = 0;
+            const targetPlaylist = playlists.find(p => p.id === playlistId);
+            if (data && data.categories) {
+                data.categories.forEach(cat => {
+                    if (data[cat.category_id]) {
+                        data[cat.category_id].forEach(stream => {
+                            xtreamCounter++;
+                            channels.push({
+                                id: 'xtream_' + playlistId + '_' + xtreamCounter + '_' + stream.stream_id,
+                                name: stream.name,
+                                logo: stream.stream_icon,
+                                group: cat.category_name,
+                                category: cat.category_name.trim(),
+                                url: `${targetPlaylist?.server}/live/${targetPlaylist?.username}/${targetPlaylist?.password}/${stream.stream_id}.ts`,
+                                playlistId,
+                                enabled: true
+                            });
+                        });
+                    }
+                });
+            }
+            return channels;
+        }
+
+        function resetMainDisplay() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = allChannels.filter(c => 
+                !deletedChannels.some(d => d.id === c.id) &&
+                (currentCategory === "All" || c.category === currentCategory) &&
+                c.name.toLowerCase().includes(searchTerm)
+            );
+            
+            displayedChannels = filtered;
+            currentMainPage = 0;
+            hasMoreMain = displayedChannels.length > MAIN_PAGE_SIZE;
+            
+            const grid = document.getElementById('channelsGrid');
+            grid.innerHTML = '';
+            
+            if (displayedChannels.length === 0) {
+                grid.innerHTML = '<div class="empty-state">No channels found matching active filters</div>';
+                return;
+            }
+            
+            loadMoreMainChannels();
+        }
+
+        function loadMoreMainChannels() {
+            if (isLoadingMain || !hasMoreMain) return;
+            
+            isLoadingMain = true;
+            
+            const existingTrigger = document.getElementById('mainLoadingTrigger');
+            if (existingTrigger) existingTrigger.remove();
+            
+            const start = currentMainPage * MAIN_PAGE_SIZE;
+            const end = start + MAIN_PAGE_SIZE;
+            const channelsToAdd = displayedChannels.slice(start, end);
+            
+            if (channelsToAdd.length > 0) {
+                const grid = document.getElementById('channelsGrid');
+                const fragment = document.createDocumentFragment();
+                
+                channelsToAdd.forEach(channel => {
+                    const card = createChannelCard(channel);
+                    fragment.appendChild(card);
+                });
+                grid.appendChild(fragment);
+                
+                currentMainPage++;
+                hasMoreMain = end < displayedChannels.length;
+                
+                if (hasMoreMain) {
+                    const trigger = document.createElement('div');
+                    trigger.className = 'loading-trigger';
+                    trigger.id = 'mainLoadingTrigger';
+                    trigger.innerHTML = '<div class="spinner"></div><p style="font-size:12px; margin-top:6px; opacity:0.7;">Loading more items...</p>';
+                    grid.appendChild(trigger);
+                }
+            }
+            
+            setTimeout(() => {
+                isLoadingMain = false;
+                if (mainScrollContainer && mainScrollContainer.scrollTop + mainScrollContainer.clientHeight >= mainScrollContainer.scrollHeight - 75) {
+                    loadMoreMainChannels();
+                }
+            }, 100);
+        }
+
+        function createChannelCard(channel) {
+            const div = document.createElement('div');
+            div.className = 'channel-card';
+            div.innerHTML = `
+                <div class="fav-star" onclick="event.stopPropagation(); toggleFavorite('${channel.id}')">${favorites.includes(channel.id) ? '❤️' : '⭐'}</div>
+                <div onclick="playChannel('${channel.id}')">
+                    <div class="channel-logo-wrapper">
+                        ${channel.logo ? `<img src="${channel.logo}" onerror="this.parentElement.innerHTML='📺'">` : '📺'}
+                    </div>
+                    <div class="channel-name">${escapeHtml(channel.name)}</div>
+                </div>
+            `;
+            return div;
+        }
+
+        document.getElementById('searchInput')?.addEventListener('input', () => {
+            resetMainDisplay();
+        });
+
+        function filterByCategory(category) {
+            currentCategory = category;
+            loadCategories();
+            resetMainDisplay();
+        }
+
+        function playChannel(channelId) {
+            const channel = allChannels.find(c => c.id === channelId);
+            if (!channel || !channel.url) {
+                alert('Stream URL data not available');
+                return;
+            }
+            
+            currentChannel = channel;
+            const video = document.getElementById('videoPlayer');
+            const source = document.getElementById('videoSource');
+            source.src = channel.url;
+            video.load();
+            video.play().catch(e => {
+                console.error("Playback error: ", e);
+                alert('Cannot read video stream. Ensure link is active.');
+            });
+            document.getElementById('playerContainer').classList.add('open');
+        }
+
+        function closePlayer() {
+            const video = document.getElementById('videoPlayer');
+            if(video) {
+                video.pause();
+                document.getElementById('videoSource').src = "";
+            }
+            document.getElementById('playerContainer').classList.remove('open');
+        }
+
+        function loadFavorites() {
+            const key = `favorites_${currentUser.username}`;
+            favorites = JSON.parse(localStorage.getItem(key) || '[]');
+            displayFavorites();
+        }
+
+        function toggleFavorite(channelId) {
+            const index = favorites.indexOf(channelId);
+            if (index === -1) {
+                favorites.push(channelId);
+            } else {
+                favorites.splice(index, 1);
+            }
+            localStorage.setItem(`favorites_${currentUser.username}`, JSON.stringify(favorites));
+            displayFavorites();
+            resetMainDisplay();
+        }
+
+        function displayFavorites() {
+            const favChannels = allChannels.filter(c => favorites.includes(c.id) && !deletedChannels.some(d => d.id === c.id));
+            const grid = document.getElementById('favoritesGrid');
+            
+            if (favChannels.length === 0) {
+                grid.innerHTML = '<div class="empty-state">No favorite channels added yet</div>';
+                return;
+            }
+            
+            grid.innerHTML = '';
+            favChannels.forEach(channel => {
+                grid.appendChild(createChannelCard(channel));
+            });
+        }
+
+        function loadCategories() {
+            const bar = document.getElementById('categoriesBar');
+            if (!bar) return;
+            bar.innerHTML = categories.map(cat => `
+                <div class="category-chip ${currentCategory === cat ? 'active' : ''}" onclick="filterByCategory('${cat}')">${cat}</div>
+            `).join('');
+        }
+
+        function updateCategoriesFromChannels() {
+            const activeChannels = allChannels.filter(c => !deletedChannels.some(d => d.id === c.id));
+            const uniqueGroups = ['All', ...new Set(activeChannels.map(c => c.category.trim()).filter(g => g))];
+            categories = uniqueGroups;
+            localStorage.setItem('iptv_categories', JSON.stringify(categories));
+            loadCategories();
+        }
+
+        function openAdminPanel() {
+            if (!currentUser?.isAdmin) {
+                alert('Admin credentials required');
+                return;
+            }
+            document.getElementById('adminPanel').classList.add('active');
+            loadPlaylistsList();
+            loadAdminChannelsPaginated();
+            loadDeletedChannelsList();
+            loadAdminCategoriesList();
+            loadAdminUsersList();
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminPanel').classList.remove('active');
+        }
+
+        function showAdminTab(tabName) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.admin-tab-content').forEach(c => c.style.display = 'none');
+            
+            event.target.classList.add('active');
+            document.getElementById(`${tabName}Tab`).style.display = 'block';
+            
+            if (tabName === 'channels') {
+                loadAdminChannelsPaginated();
+            }
+        }
+
+        function loadAdminChannelsPaginated(page = 1) {
+            adminCurrentPage = page;
+            const searchTerm = document.getElementById('adminChannelSearch')?.value.toLowerCase() || '';
+            
+            adminFilteredChannels = allChannels.filter(c => 
+                !deletedChannels.some(d => d.id === c.id) &&
+                c.name.toLowerCase().includes(searchTerm)
+            );
+            
+            adminTotalPages = Math.ceil(adminFilteredChannels.length / ADMIN_PAGE_SIZE);
+            const start = (adminCurrentPage - 1) * ADMIN_PAGE_SIZE;
+            const end = start + ADMIN_PAGE_SIZE;
+            const pageChannels = adminFilteredChannels.slice(start, end);
+            
+            const statsDiv = document.getElementById('adminChannelsStats');
+            if (statsDiv) {
+                statsDiv.innerHTML = `Total layout items: ${adminFilteredChannels.length} channels | Page ${adminCurrentPage} of ${adminTotalPages || 1}`;
+            }
+            
+            const container = document.getElementById('adminChannelsList');
+            if (pageChannels.length === 0) {
+                container.innerHTML = '<div class="empty-state">No matching indices found</div>';
+            } else {
+                container.innerHTML = pageChannels.map(ch => `
+                    <div class="admin-channel-item">
+                        <div style="flex:2; overflow: hidden; text-overflow:ellipsis; white-space:nowrap;">
+                            <strong style="font-size:13px;">${escapeHtml(ch.name)}</strong>
+                        </div>
+                        <div style="flex:1; min-width:100px;">
+                            <select onchange="changeChannelCategory('${ch.id}', this.value)" style="width:100%; padding:5px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:5px; color:white; font-size:11px;">
+                                ${categories.filter(c => c !== 'All').map(cat => `<option value="${cat}" ${ch.category === cat ? 'selected' : ''}>${cat}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <button class="admin-btn admin-btn-small" onclick="deleteChannel('${ch.id}')">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            const paginationDiv = document.getElementById('adminChannelsPagination');
+            if (adminTotalPages > 1) {
+                let paginationHtml = '';
+                if (adminCurrentPage > 1) {
+                    paginationHtml += `<button class="admin-btn admin-btn-small" onclick="loadAdminChannelsPaginated(${adminCurrentPage - 1})">◀ Prev</button>`;
+                }
+                paginationHtml += `<span style="padding:5px 10px; font-size:12px;">${adminCurrentPage} / ${adminTotalPages}</span>`;
+                if (adminCurrentPage < adminTotalPages) {
+                    paginationHtml += `<button class="admin-btn admin-btn-small" onclick="loadAdminChannelsPaginated(${adminCurrentPage + 1})">Next ▶</button>`;
+                }
+                paginationDiv.innerHTML = paginationHtml;
+            } else {
+                paginationDiv.innerHTML = '';
+            }
+        }
+
+        function searchAdminChannels() {
+            loadAdminChannelsPaginated(1);
+        }
+
+        function changeChannelCategory(channelId, newCategory) {
+            const channel = allChannels.find(c => c.id === channelId);
+            if (channel) {
+                channel.category = newCategory.trim();
+                channel.group = newCategory.trim();
+                localStorage.setItem('iptv_all_channels', JSON.stringify(allChannels));
+                resetMainDisplay();
+                updateCategoriesFromChannels();
+                loadAdminChannelsPaginated(adminCurrentPage);
+            }
+        }
+
+        function deleteChannel(channelId) {
+            const channel = allChannels.find(c => c.id === channelId);
+            if (channel && confirm(`Hide "${channel.name}" from view layouts?`)) {
+                allChannels = allChannels.filter(c => c.id !== channelId);
+                deletedChannels.push({ ...channel, deletedAt: new Date().toISOString() });
+                localStorage.setItem('iptv_all_channels', JSON.stringify(allChannels));
+                localStorage.setItem('iptv_deleted_channels', JSON.stringify(deletedChannels));
+                loadAdminChannelsPaginated(adminCurrentPage);
+                loadDeletedChannelsList();
+                resetMainDisplay();
+                updateCategoriesFromChannels();
+            }
+        }
+
+        function loadDeletedChannelsList() {
+            const container = document.getElementById('deletedChannelsList');
+            if (deletedChannels.length === 0) {
+                container.innerHTML = '<div class="empty-state">No channels inside current deleted stack</div>';
+                return;
+            }
+            
+            container.innerHTML = deletedChannels.map(ch => `
+                <div class="playlist-item">
+                    <div style="flex:2; overflow:hidden;">
+                        <strong>${escapeHtml(ch.name)}</strong><br>
+                        <small style="font-size:10px; opacity:0.6;">Removed: ${new Date(ch.deletedAt).toLocaleDateString()}</small>
+                    </div>
+                    <div>
+                        <button class="admin-btn admin-btn-small" onclick="restoreChannel('${ch.id}')">Restore</button>
+                        <button class="admin-btn admin-btn-small" style="background:#f44336;" onclick="permanentlyDeleteChannel('${ch.id}')">Purge</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function restoreChannel(channelId) {
+            const channel = deletedChannels.find(c => c.id === channelId);
+            if (channel) {
+                deletedChannels = deletedChannels.filter(c => c.id !== channelId);
+                allChannels.push(channel);
+                localStorage.setItem('iptv_all_channels', JSON.stringify(allChannels));
+                localStorage.setItem('iptv_deleted_channels', JSON.stringify(deletedChannels));
+                loadAdminChannelsPaginated(adminCurrentPage);
+                loadDeletedChannelsList();
+                resetMainDisplay();
+                updateCategoriesFromChannels();
+            }
+        }
+
+        function permanentlyDeleteChannel(channelId) {
+            if (confirm('Permanently purge this item registration structure?')) {
+                deletedChannels = deletedChannels.filter(c => c.id !== channelId);
+                localStorage.setItem('iptv_deleted_channels', JSON.stringify(deletedChannels));
+                loadDeletedChannelsList();
+            }
+        }
+
+        function addPlaylist() {
+            const type = document.getElementById('playlistType').value;
+            const name = document.getElementById('newPlaylistName').value.trim();
+            
+            if (!name) {
+                alert('Enter unique target name parameter mapping');
+                return;
+            }
+            
+            let newPlaylist = {
+                id: 'pl_' + Date.now().toString() + '_' + Math.floor(Math.random() * 1000),
+                name: name,
+                type: type,
+                enabled: true
+            };
+            
+            if (type === 'm3u') {
+                const url = document.getElementById('newPlaylistUrl').value;
+                if (!url) { alert('Enter configuration resource endpoint target URL'); return; }
+                newPlaylist.url = url;
+            } else if (type === 'xtream') {
+                const server = document.getElementById('xtreamServer').value;
+                const username = document.getElementById('xtreamUser').value;
+                const password = document.getElementById('xtreamPass').value;
+                if (!server || !username || !password) { alert('Complete all parameter setup lines'); return; }
+                newPlaylist.server = server;
+                newPlaylist.username = username;
+                newPlaylist.password = password;
+            } else if (type === 'mag') {
+                const portalUrl = document.getElementById('magPortalUrl').value;
+                if (!portalUrl) { alert('Enter Portal core layout frame registration address'); return; }
+                newPlaylist.portalUrl = portalUrl;
+                newPlaylist.mac = document.getElementById('magMac').value;
+            }
+            
+            playlists.push(newPlaylist);
+            localStorage.setItem('iptv_playlists', JSON.stringify(playlists));
+            
+            allChannels = [];
+            localStorage.setItem('iptv_all_channels', JSON.stringify([]));
+            
+            loadPlaylistsList();
+            clearAddPlaylistInputs();
+            loadChannels();
+        }
+
+        function togglePlaylist(playlistId) {
+            const playlist = playlists.find(p => p.id === playlistId);
+            if (playlist) {
+                playlist.enabled = !playlist.enabled;
+                localStorage.setItem('iptv_playlists', JSON.stringify(playlists));
+                
+                allChannels = [];
+                localStorage.setItem('iptv_all_channels', JSON.stringify([]));
+                
+                loadPlaylistsList();
+                loadChannels();
+            }
+        }
+
+        function deletePlaylist(playlistId) {
+            if (confirm('Delete target playlist structure file registration completely?')) {
+                playlists = playlists.filter(p => p.id !== playlistId);
+                localStorage.setItem('iptv_playlists', JSON.stringify(playlists));
+                
+                allChannels = [];
+                localStorage.setItem('iptv_all_channels', JSON.stringify([]));
+                
+                loadPlaylistsList();
+                loadChannels();
+            }
+        }
+
+        function loadPlaylistsList() {
+            const container = document.getElementById('playlistsList');
+            container.innerHTML = playlists.map(p => `
+                <div class="playlist-item">
+                    <div>
+                        <strong>${escapeHtml(p.name)}</strong><br>
+                        <small style="opacity:0.6;">Profile: ${p.type.toUpperCase()}</small>
+                    </div>
+                    <div>
+                        <span class="status-badge ${p.enabled ? 'status-enabled' : 'status-disabled'}">${p.enabled ? 'ACTIVE' : 'DISABLED'}</span>
+                        <button class="admin-btn admin-btn-small" onclick="togglePlaylist('${p.id}')">${p.enabled ? 'Disable' : 'Enable'}</button>
+                        <button class="admin-btn admin-btn-small" onclick="deletePlaylist('${p.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addNewCategory() {
+            const newCat = document.getElementById('newCategoryName').value.trim();
+            if (newCat && !categories.includes(newCat)) {
+                categories.push(newCat);
+                localStorage.setItem('iptv_categories', JSON.stringify(categories));
+                loadAdminCategoriesList();
+                loadCategories();
+                document.getElementById('newCategoryName').value = '';
+            }
+        }
+
+        function deleteCategoryFromAdmin(category) {
+            if (confirm(`Remove custom layer tag index grouping identity matching "${category}"?`)) {
+                categories = categories.filter(c => c !== category);
+                localStorage.setItem('iptv_categories', JSON.stringify(categories));
+                loadAdminCategoriesList();
+                loadCategories();
+                if (currentCategory === category) {
+                    currentCategory = 'All';
+                    resetMainDisplay();
+                }
+            }
+        }
+
+        function loadAdminCategoriesList() {
+            const container = document.getElementById('adminCategoriesList');
+            const customCats = categories.filter(c => c !== 'All');
+            if (customCats.length === 0) {
+                container.innerHTML = '<div class="empty-state">No custom groups registered</div>';
+                return;
+            }
+            container.innerHTML = customCats.map(cat => `
+                <div class="playlist-item">
+                    <span>${cat}</span>
+                    <button class="admin-btn admin-btn-small" onclick="deleteCategoryFromAdmin('${cat}')">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        function addNewUser() {
+            const username = document.getElementById('newUserName').value.trim();
+            const password = document.getElementById('newUserPass').value;
+            
+            if (!username || !password) {
+                alert('Enter tracking identification details configuration entries');
+                return;
+            }
+            if (users.find(u => u.username === username)) {
+                alert('Account handle key match parameter exists in system logs');
+                return;
+            }
+            
+            users.push({ username, password, isAdmin: false });
+            localStorage.setItem('iptv_users', JSON.stringify(users));
+            loadAdminUsersList();
+            document.getElementById('newUserName').value = '';
+            document.getElementById('newUserPass').value = '';
+        }
+
+        function deleteUser(username) {
+            if (username === currentUser.username) {
+                alert('Operational terminal blocking execution: Cannot delete active structural profile.');
+                return;
+            }
+            users = users.filter(u => u.username !== username);
+            localStorage.setItem('iptv_users', JSON.stringify(users));
+            loadAdminUsersList();
+        }
+
+        function loadAdminUsersList() {
+            const container = document.getElementById('adminUsersList');
+            const regularUsers = users.filter(u => !u.isAdmin);
+            if (regularUsers.length === 0) {
+                container.innerHTML = '<div class="empty-state">No default clients registered</div>';
+                return;
+            }
+            container.innerHTML = regularUsers.map(u => `
+                <div class="playlist-item">
+                    <span>${u.username}</span>
+                    <button class="admin-btn admin-btn-small" onclick="deleteUser('${u.username}')">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        function handleUserLogin() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('iptv_current_user', JSON.stringify(user));
+                updateAuthUI();
+                closeLoginModal();
+                loadFavorites();
+                resetMainDisplay();
+            } else {
+                alert('Error mapping verification security hashes.');
+            }
+        }
+
+        function updateAuthUI() {
+            const isLoggedIn = currentUser && currentUser.username !== 'guest';
+            document.getElementById('loginMenuItem').style.display = isLoggedIn ? 'none' : 'block';
+            document.getElementById('logoutMenuItem').style.display = isLoggedIn ? 'block' : 'none';
+            
+            if (currentUser?.isAdmin) {
+                document.getElementById('adminIcon').style.display = 'block';
+                document.getElementById('adminMenuItem').style.display = 'block';
+            } else {
+                document.getElementById('adminIcon').style.display = 'none';
+                document.getElementById('adminMenuItem').style.display = 'none';
+            }
+        }
+
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+            closeSidebar();
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+        }
+
+        function logout() {
+            currentUser = { username: 'guest', isAdmin: false };
+            localStorage.setItem('iptv_current_user', JSON.stringify(currentUser));
+            updateAuthUI();
+            favorites = [];
+            displayFavorites();
+            resetMainDisplay();
+            closeSidebar();
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('overlay').style.display = document.getElementById('sidebar').classList.contains('open') ? 'block' : 'none';
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function navigateTo(page) {
+            closeSidebar();
+            switchTab(page);
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            
+            if (tab === 'channels') {
+                document.querySelector('.tab').classList.add('active');
+                document.getElementById('channelsPanel').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('favoritesPanel').classList.add('active');
+                displayFavorites();
+            }
+        }
+
+        function clearAddPlaylistInputs() {
+            document.getElementById('newPlaylistUrl').value = '';
+            document.getElementById('xtreamServer').value = '';
+            document.getElementById('xtreamUser').value = '';
+            document.getElementById('xtreamPass').value = '';
+            document.getElementById('magPortalUrl').value = '';
+            document.getElementById('magMac').value = '';
+            document.getElementById('newPlaylistName').value = '';
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        document.getElementById('playlistType')?.addEventListener('change', function() {
+            document.getElementById('m3uAdd').style.display = this.value === 'm3u' ? 'block' : 'none';
+            document.getElementById('xtreamAdd').style.display = this.value === 'xtream' ? 'block' : 'none';
+            document.getElementById('magAdd').style.display = this.value === 'mag' ? 'block' : 'none';
+        });
+
+        init();
+    </script>
+</body>
+</html>
