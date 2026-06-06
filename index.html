@@ -127,7 +127,7 @@
             gap: 6px;
         }
         
-        /* CORRECTED DROPDOWN STYLINGS (Fixes invisible text on white OS dropdowns) [1] */
+        /* CORRECTED DROPDOWN STYLINGS (Fixes invisible text on white OS dropdowns) */
         .player-select {
             background: #1a1a2e;
             color: white;
@@ -526,7 +526,7 @@
         </div>
     </div>
 
-    <!-- PLAYER SETUP MODAL (Enables switching between internal and external apps) [1] -->
+    <!-- PLAYER SETUP MODAL (Enables switching between internal and external apps) -->
     <div class="login-modal" id="playerSettingsModal">
         <div class="close-modal" onclick="closePlayerSettingsModal()">✕</div>
         <div class="login-box">
@@ -631,7 +631,7 @@
     </div>
 
     <div class="app-container">
-        <!-- FIXED TOP MENU BAR WITH PLAYER SETUP SHORTCUT ICON [1] -->
+        <!-- FIXED TOP MENU BAR WITH PLAYER SETUP SHORTCUT ICON -->
         <div class="menu-bar">
             <div class="menu-icon" onclick="toggleSidebar()">☰</div>
             <div class="app-title-menu">Malayalam IPTV</div>
@@ -642,7 +642,7 @@
             </div>
         </div>
 
-        <!-- FIXED VIDEO PLAYER (Positions directly under menu bar, takes up ~half screen height when open) [1] -->
+        <!-- FIXED VIDEO PLAYER (Positions directly under menu bar, takes up ~half screen height when open) -->
         <div class="player-container" id="playerContainer">
             <div class="close-player" onclick="closePlayer()">✕</div>
             <div class="video-wrapper">
@@ -670,7 +670,7 @@
             </div>
         </div>
 
-        <!-- MAIN SCROLLABLE WRAPPER (Occupies remaining space below top elements) [1] -->
+        <!-- MAIN SCROLLABLE WRAPPER (Occupies remaining space below top elements) -->
         <div class="main-scrollable-content" id="mainContentScroller">
             <div class="search-bar"><input type="text" id="searchInput" placeholder="🔍 Search channels..."></div>
             <div class="categories-bar" id="categoriesBar"></div>
@@ -705,7 +705,27 @@
 
     <script>
         // ==================== DATA STORAGE ====================
+        // PASTE YOUR RAW GITHUB OR GIST URL IN THE QUOTES BELOW:
+        const GITHUB_PLAYLIST_URL = "https://gist.githubusercontent.com/YourUsername/xxxxxx/raw/xxxxxx/malayalam.m3u";
+
+        const DEFAULT_PLAYLISTS = [
+            {
+                id: 'pl_github_sync',
+                name: '📺 Synced Malayalam Stream',
+                type: 'm3u',
+                url: GITHUB_PLAYLIST_URL,
+                enabled: true
+            }
+        ];
+
         let playlists = JSON.parse(localStorage.getItem('iptv_playlists') || '[]');
+        
+        // Force-inject the GitHub playlist if local storage is empty or missing it
+        if (playlists.length === 0 || !playlists.some(p => p.url === GITHUB_PLAYLIST_URL)) {
+            playlists = DEFAULT_PLAYLISTS;
+            localStorage.setItem('iptv_playlists', JSON.stringify(playlists));
+        }
+
         let allChannels = JSON.parse(localStorage.getItem('iptv_all_channels') || '[]');
         let deletedChannels = JSON.parse(localStorage.getItem('iptv_deleted_channels') || '[]');
         let categories = JSON.parse(localStorage.getItem('iptv_categories') || '["All"]');
@@ -1058,7 +1078,7 @@
                 return; 
             }
             
-            // EXTERNAL PLAYER LAUNCH REDIRECTOR INTENT SYSTEM [1]
+            // EXTERNAL PLAYER LAUNCH REDIRECTOR INTENT SYSTEM
             let playerPref = localStorage.getItem('iptv_player_preference') || 'internal';
             
             if (playerPref === 'vlc') {
@@ -1150,7 +1170,7 @@
             }
         }
 
-        // Configuration preferences [1]
+        // Configuration preferences
         function openPlayerSettingsModal() {
             let playerPref = localStorage.getItem('iptv_player_preference') || 'internal';
             let selector = document.querySelector(`input[name="playerPref"][value="${playerPref}"]`);
