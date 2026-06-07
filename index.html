@@ -46,6 +46,144 @@
         .menu-icon, .user-icon, .admin-icon { font-size: 24px; cursor: pointer; padding: 8px; border-radius: 10px; }
         .app-title-menu { font-size: 16px; font-weight: 600; }
 
+        /* SETTINGS BUTTON IN MENU BAR */
+        .settings-btn {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.18);
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 7px 13px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            letter-spacing: 0.2px;
+            transition: background 0.18s;
+        }
+        .settings-btn:active { background: rgba(255,255,255,0.22); }
+
+        /* SETTINGS SHEET (slides up from bottom) */
+        .settings-sheet-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 4000;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .settings-sheet-overlay.open { display: flex; }
+        .settings-sheet {
+            background: #1a1a2e;
+            border-radius: 24px 24px 0 0;
+            width: 100%;
+            max-width: 520px;
+            max-height: 88vh;
+            overflow-y: auto;
+            padding: 0 0 24px 0;
+            animation: slideUp 0.28s cubic-bezier(0.32,0.72,0,1);
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .settings-handle {
+            display: flex;
+            justify-content: center;
+            padding: 14px 0 4px;
+        }
+        .settings-handle-bar {
+            width: 40px; height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+        }
+        .settings-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 20px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        .settings-header h2 { font-size: 18px; font-weight: 700; }
+        .settings-close-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .settings-section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.4;
+            padding: 16px 20px 6px;
+        }
+        .settings-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            gap: 12px;
+        }
+        .settings-row-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .settings-row-icon { font-size: 20px; width: 28px; text-align: center; }
+        .settings-row-text strong { display: block; font-size: 14px; }
+        .settings-row-text span { display: block; font-size: 11px; opacity: 0.5; margin-top: 1px; }
+        .settings-row select {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .settings-row select option { background: #1a1a2e; }
+        .settings-action-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+            padding: 7px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.15s;
+        }
+        .settings-action-btn:active { background: rgba(255,255,255,0.22); }
+        .settings-action-btn.danger { background: rgba(244,67,54,0.15); border-color: rgba(244,67,54,0.3); color: #ff6b6b; }
+        .settings-action-btn.primary { background: linear-gradient(135deg,#ff6b6b,#ee5a24); border-color: transparent; font-weight: 600; }
+        .settings-admin-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 14px 20px 0;
+            padding: 14px 18px;
+            background: linear-gradient(135deg, rgba(102,126,234,0.25), rgba(118,75,162,0.25));
+            border: 1px solid rgba(102,126,234,0.35);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+        .settings-admin-btn:active { background: rgba(102,126,234,0.35); }
+        .settings-admin-btn-left { display: flex; align-items: center; gap: 12px; }
+        .settings-admin-btn-left .adm-icon { font-size: 26px; }
+        .settings-admin-btn-left strong { display: block; font-size: 15px; }
+        .settings-admin-btn-left span { display: block; font-size: 11px; opacity: 0.5; }
+        .settings-admin-btn-arrow { font-size: 18px; opacity: 0.4; }
+
         /* FIXED PLAYER POSITIONED BELOW TOP MENU BAR */
         .player-container {
             position: relative;
@@ -511,6 +649,77 @@
             .channels-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; padding: 8px; }
             .channel-card { padding: 8px 4px; }
         }
+
+        /* TV MODE */
+        body.tv-mode .channels-grid {
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            padding: 16px;
+        }
+        body.tv-mode .channel-card {
+            padding: 18px 12px;
+            border-radius: 18px;
+        }
+        body.tv-mode .channel-logo-wrapper {
+            width: 70px;
+            height: 70px;
+            font-size: 34px;
+            border-radius: 14px;
+            margin-bottom: 10px;
+        }
+        body.tv-mode .channel-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        body.tv-mode .player-container.open {
+            height: 60vh;
+        }
+        body.tv-mode .menu-bar {
+            padding: 16px 24px;
+        }
+        body.tv-mode .app-title-menu {
+            font-size: 20px;
+        }
+        body.tv-mode .tab-bar .tab {
+            font-size: 16px;
+            padding: 12px;
+        }
+        body.tv-mode .category-chip {
+            font-size: 14px;
+            padding: 8px 18px;
+        }
+        body.tv-mode .search-bar input {
+            font-size: 16px;
+            padding: 12px 20px;
+        }
+
+        /* FULLSCREEN PLAYER BUTTON */
+        .fullscreen-btn {
+            background: rgba(0,0,0,0.6);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 15px;
+            position: absolute;
+            top: 10px;
+            right: 50px;
+            z-index: 1010;
+        }
+        .player-container.fullscreen-active {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999 !important;
+            display: flex !important;
+        }
     </style>
     <!-- Include Hls.js library for adaptive stream quality handling -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -557,7 +766,6 @@
                         <div style="font-size: 11px; opacity: 0.7;">Launches Android MX Player intent.</div>
                     </div>
                 </label>
-                
             </div>
             <button class="login-btn" onclick="closePlayerSettingsModal()">Save Changes</button>
         </div>
@@ -631,13 +839,12 @@
     </div>
 
     <div class="app-container">
-        <!-- FIXED TOP MENU BAR WITH PLAYER SETUP SHORTCUT ICON -->
+        <!-- FIXED TOP MENU BAR -->
         <div class="menu-bar">
             <div class="menu-icon" onclick="toggleSidebar()">☰</div>
             <div class="app-title-menu">Malayalam IPTV</div>
             <div style="display: flex; gap: 8px; align-items: center;">
-                <div class="user-icon" onclick="openPlayerSettingsModal()" style="font-size: 20px;" title="Player Configuration">⚙️</div>
-                <div class="admin-icon" id="adminIcon" style="display: none; font-size: 20px;" onclick="openAdminPanel()" title="Admin Panel">🛡️</div>
+                <button class="settings-btn" onclick="openSettingsSheet()" title="Settings">⚙️ Settings</button>
                 <div class="user-icon" id="userIconBtn" style="font-size: 20px;" onclick="openLoginModal()" title="Login">👤</div>
             </div>
         </div>
@@ -645,6 +852,7 @@
         <!-- FIXED VIDEO PLAYER (Positions directly under menu bar, takes up ~half screen height when open) -->
         <div class="player-container" id="playerContainer">
             <div class="close-player" onclick="closePlayer()">✕</div>
+            <button class="fullscreen-btn" onclick="togglePlayerFullscreen()" title="Fullscreen">⛶</button>
             <div class="video-wrapper">
                 <video id="videoPlayer" controls playsinline></video>
                 <div id="playerStatusOverlay" class="player-status-overlay">Loading...</div>
@@ -703,6 +911,141 @@
         <div class="menu-item" id="logoutMenuItem" style="display: none;" onclick="logout()">🚪 Logout</div>
     </div>
 
+    <!-- ===================== SETTINGS SHEET ===================== -->
+    <div class="settings-sheet-overlay" id="settingsSheetOverlay" onclick="closeSettingsSheetOnBg(event)">
+        <div class="settings-sheet" id="settingsSheet">
+            <div class="settings-handle"><div class="settings-handle-bar"></div></div>
+            <div class="settings-header">
+                <h2>⚙️ Settings</h2>
+                <button class="settings-close-btn" onclick="closeSettingsSheet()">✕</button>
+            </div>
+
+            <!-- PLAYER -->
+            <div class="settings-section-label">Player</div>
+            <div class="settings-row">
+                <div class="settings-row-left">
+                    <div class="settings-row-icon">🎬</div>
+                    <div class="settings-row-text">
+                        <strong>Playback Player</strong>
+                        <span>Where streams are opened</span>
+                    </div>
+                </div>
+                <select id="settingsPlayerPref" onchange="savePlayerPreference(this.value)">
+                    <option value="internal">In-App Player</option>
+                    <option value="vlc">VLC Player</option>
+                    <option value="mx">MX Player</option>
+                </select>
+            </div>
+
+            <!-- DISPLAY -->
+            <div class="settings-section-label">Display</div>
+            <div class="settings-row">
+                <div class="settings-row-left">
+                    <div class="settings-row-icon">🏠</div>
+                    <div class="settings-row-text">
+                        <strong>Default Tab</strong>
+                        <span>Tab shown on startup</span>
+                    </div>
+                </div>
+                <select id="settingsDefaultTab" onchange="saveDefaultTab(this.value)">
+                    <option value="channels">All Channels</option>
+                    <option value="favorites">Favorites</option>
+                </select>
+            </div>
+            <div class="settings-row">
+                <div class="settings-row-left">
+                    <div class="settings-row-icon">📐</div>
+                    <div class="settings-row-text">
+                        <strong>Grid Columns</strong>
+                        <span>Cards per row</span>
+                    </div>
+                </div>
+                <select id="settingsGridSize" onchange="saveGridSize(this.value)">
+                    <option value="auto">Auto</option>
+                    <option value="2">2 Columns</option>
+                    <option value="3">3 Columns</option>
+                    <option value="4">4 Columns</option>
+                </select>
+            </div>
+            <div class="settings-row">
+                <div class="settings-row-left">
+                    <div class="settings-row-icon">🖥️</div>
+                    <div class="settings-row-text">
+                        <strong>Display Mode</strong>
+                        <span>Mobile: compact touch layout · TV: large tiles &amp; big player</span>
+                    </div>
+                </div>
+                <select id="settingsDisplayMode" onchange="applyDisplayMode(this.value)">
+                    <option value="mobile">📱 Mobile</option>
+                    <option value="tv">🖥️ TV Mode</option>
+                </select>
+            </div>
+
+            <!-- ACCOUNT -->
+            <div class="settings-section-label">Account</div>
+            <div class="settings-row" id="settingsLoginRow">
+                <div class="settings-row-left">
+                    <div class="settings-row-icon">👤</div>
+                    <div class="settings-row-text">
+                        <strong id="settingsUserLabel">Not logged in</strong>
+                        <span id="settingsUserSub">Tap to sign in</span>
+                    </div>
+                </div>
+                <button class="settings-action-btn" id="settingsAuthBtn" onclick="settingsAuthAction()">Login</button>
+            </div>
+
+            <!-- DATA -->
+            <div class="settings-section-label">Data</div>
+            <div class="settings-row">
+                <div class="settings-row-left">
+                    <div class="settings-row-icon">🔄</div>
+                    <div class="settings-row-text">
+                        <strong>Refresh Channels</strong>
+                        <span>Re-fetch all playlists</span>
+                    </div>
+                </div>
+                <button class="settings-action-btn" onclick="loadChannels(); closeSettingsSheet();">Refresh</button>
+            </div>
+            <div class="settings-row">
+                <div class="settings-row-left">
+                    <div class="settings-row-icon">🗑️</div>
+                    <div class="settings-row-text">
+                        <strong>Clear Cache</strong>
+                        <span>Remove stored channel data</span>
+                    </div>
+                </div>
+                <button class="settings-action-btn danger" onclick="clearCache()">Clear</button>
+            </div>
+
+            <!-- ABOUT -->
+            <div class="settings-section-label">About</div>
+            <div class="settings-row">
+                <div class="settings-row-left">
+                    <div class="settings-row-icon">📺</div>
+                    <div class="settings-row-text">
+                        <strong>Malayalam IPTV</strong>
+                        <span>Premium Stream Hub v3.0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADMIN PANEL BUTTON (only visible to admins) -->
+            <div id="settingsAdminBlock" style="display:none;">
+                <div class="settings-section-label">Admin</div>
+                <div class="settings-admin-btn" onclick="openAdminPanel(); closeSettingsSheet();">
+                    <div class="settings-admin-btn-left">
+                        <div class="adm-icon">🛡️</div>
+                        <div>
+                            <strong>Admin Panel</strong>
+                            <span>Manage playlists, channels & users</span>
+                        </div>
+                    </div>
+                    <div class="settings-admin-btn-arrow">›</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ==================== DATA STORAGE ====================
         // PASTE YOUR RAW GITHUB OR GIST URL IN THE QUOTES BELOW:
@@ -729,7 +1072,15 @@
         let allChannels = JSON.parse(localStorage.getItem('iptv_all_channels') || '[]');
         let deletedChannels = JSON.parse(localStorage.getItem('iptv_deleted_channels') || '[]');
         let categories = JSON.parse(localStorage.getItem('iptv_categories') || '["All"]');
-        let users = JSON.parse(localStorage.getItem('iptv_users') || '[{"username":"admin1","password":"5787","isAdmin":true},{"username":"guest","password":"guest","isAdmin":false}]');
+        // Users: stored in localStorage only. First run seeds defaults privately.
+        let _storedUsers = localStorage.getItem('iptv_users');
+        if(!_storedUsers) {
+            // First-time setup — seed defaults into localStorage and immediately clear from memory
+            let _seed = [{"username":"admin1","password":"5787","isAdmin":true},{"username":"guest","password":"guest","isAdmin":false}];
+            localStorage.setItem('iptv_users', JSON.stringify(_seed));
+            _seed = null;
+        }
+        let users = JSON.parse(localStorage.getItem('iptv_users'));
         let currentUser = JSON.parse(localStorage.getItem('iptv_current_user') || '{"username":"guest","isAdmin":false}');
         let favorites = [];
         let currentCategory = "All";
@@ -872,23 +1223,38 @@
             loadChannels();
             document.getElementById('searchInput').addEventListener('input', () => resetMainDisplay());
             
+            // Apply saved grid size
+            let gs = localStorage.getItem('iptv_grid_size') || 'auto';
+            applyGridSize(gs);
+
+            // Apply saved display mode
+            loadDisplayMode();
+
             // Set default player configuration state
             let playerPref = localStorage.getItem('iptv_player_preference') || 'internal';
             let selector = document.querySelector(`input[name="playerPref"][value="${playerPref}"]`);
             if (selector) selector.checked = true;
+
+            // Apply default tab
+            let defaultTab = localStorage.getItem('iptv_default_tab') || 'channels';
+            switchTab(defaultTab);
         }
 
         function syncAdminCredentials() {
+            // Verify stored users exist; never expose credentials anywhere
             let existing = localStorage.getItem('iptv_users');
             if(existing) { 
                 let parsed = JSON.parse(existing); 
-                if(!parsed.find(u=>u.username==='admin1')) parsed.unshift({username:"admin1",password:"5787",isAdmin:true}); 
-                localStorage.setItem('iptv_users',JSON.stringify(parsed)); 
-                users=parsed; 
+                localStorage.setItem('iptv_users', JSON.stringify(parsed)); 
+                users = parsed; 
             }
-            if(currentUser.isAdmin && currentUser.username!=='admin1') { 
-                currentUser={username:'guest',isAdmin:false}; 
-                localStorage.setItem('iptv_current_user',JSON.stringify(currentUser)); 
+            // If current session user is claimed admin but not in users list, reset to guest
+            if(currentUser.isAdmin) {
+                let found = users.find(u => u.username === currentUser.username && u.isAdmin);
+                if(!found) {
+                    currentUser = {username:'guest', isAdmin:false}; 
+                    localStorage.setItem('iptv_current_user', JSON.stringify(currentUser)); 
+                }
             }
         }
 
@@ -1185,6 +1551,107 @@
 
         function savePlayerPreference(value) {
             localStorage.setItem('iptv_player_preference', value);
+            // Also sync to the old modal radio
+            let r = document.querySelector(`input[name="playerPref"][value="${value}"]`);
+            if(r) r.checked = true;
+        }
+
+        // ==================== SETTINGS SHEET ====================
+        function openSettingsSheet() {
+            // Sync all selects to current saved values
+            let pp = localStorage.getItem('iptv_player_preference') || 'internal';
+            document.getElementById('settingsPlayerPref').value = pp;
+
+            let dt = localStorage.getItem('iptv_default_tab') || 'channels';
+            document.getElementById('settingsDefaultTab').value = dt;
+
+            let gs = localStorage.getItem('iptv_grid_size') || 'auto';
+            document.getElementById('settingsGridSize').value = gs;
+
+            let dm = localStorage.getItem('iptv_display_mode') || 'mobile';
+            document.getElementById('settingsDisplayMode').value = dm;
+
+            updateAuthUI();
+            document.getElementById('settingsSheetOverlay').classList.add('open');
+        }
+
+        function closeSettingsSheet() {
+            document.getElementById('settingsSheetOverlay').classList.remove('open');
+        }
+
+        function closeSettingsSheetOnBg(e) {
+            if(e.target === document.getElementById('settingsSheetOverlay')) closeSettingsSheet();
+        }
+
+        function saveDefaultTab(val) {
+            localStorage.setItem('iptv_default_tab', val);
+        }
+
+        function saveGridSize(val) {
+            localStorage.setItem('iptv_grid_size', val);
+            applyGridSize(val);
+        }
+
+        function applyGridSize(val) {
+            let grid = document.getElementById('channelsGrid');
+            let favGrid = document.getElementById('favoritesGrid');
+            let cols = { '2':'repeat(2,1fr)', '3':'repeat(3,1fr)', '4':'repeat(4,1fr)', 'auto':'repeat(auto-fill,minmax(140px,1fr))' };
+            let style = cols[val] || cols['auto'];
+            [grid, favGrid].forEach(g => { if(g) g.style.gridTemplateColumns = style; });
+        }
+
+        function settingsAuthAction() {
+            let logged = currentUser && currentUser.username !== 'guest';
+            if(logged) {
+                logout();
+                updateAuthUI();
+            } else {
+                closeSettingsSheet();
+                openLoginModal();
+            }
+        }
+
+        function clearCache() {
+            if(confirm('Clear all stored channel data? Playlists and users are kept.')) {
+                localStorage.removeItem('iptv_all_channels');
+                localStorage.removeItem('iptv_deleted_channels');
+                allChannels = [];
+                deletedChannels = [];
+                loadChannels();
+                closeSettingsSheet();
+            }
+        }
+
+        // ==================== DISPLAY MODE (MOBILE / TV) ====================
+        function applyDisplayMode(mode) {
+            localStorage.setItem('iptv_display_mode', mode);
+            if(mode === 'tv') {
+                document.body.classList.add('tv-mode');
+            } else {
+                document.body.classList.remove('tv-mode');
+            }
+            document.getElementById('settingsDisplayMode').value = mode;
+        }
+
+        function loadDisplayMode() {
+            let mode = localStorage.getItem('iptv_display_mode') || 'mobile';
+            applyDisplayMode(mode);
+        }
+
+        // ==================== FULLSCREEN PLAYER ====================
+        let isPlayerFullscreen = false;
+        function togglePlayerFullscreen() {
+            let container = document.getElementById('playerContainer');
+            isPlayerFullscreen = !isPlayerFullscreen;
+            if(isPlayerFullscreen) {
+                container.classList.add('fullscreen-active');
+                document.querySelector('.fullscreen-btn').textContent = '✕⛶';
+                document.querySelector('.fullscreen-btn').title = 'Exit Fullscreen';
+            } else {
+                container.classList.remove('fullscreen-active');
+                document.querySelector('.fullscreen-btn').textContent = '⛶';
+                document.querySelector('.fullscreen-btn').title = 'Fullscreen';
+            }
         }
 
         function changePlaybackSpeed() {
@@ -1470,8 +1937,35 @@
         function loadAdminUsersList(){ let container=document.getElementById('adminUsersList'); let regular=users.filter(u=>!u.isAdmin); if(!regular.length){ container.innerHTML='<div class="empty-state">No additional users profiles built.</div>'; return; } container.innerHTML=regular.map(u=>`<div class="playlist-item"><span>${u.username}</span><button class="admin-btn-small" onclick="deleteUser('${u.username}')">Delete User</button></div>`).join(''); }
         
         // ==================== NAVIGATION AND AUTH LOGIN HANDLERS ====================
-        function handleUserLogin(){ let un=document.getElementById('loginUsername').value.trim(), pw=document.getElementById('loginPassword').value; let user=users.find(u=>u.username===un && u.password===pw); if(user){ currentUser=user; localStorage.setItem('iptv_current_user',JSON.stringify(user)); updateAuthUI(); closeLoginModal(); loadFavorites(); resetMainDisplay(); } else alert("Invalid credential combo data. System Default Admin: admin1 / 5787"); }
-        function updateAuthUI(){ let logged=currentUser && currentUser.username!=='guest'; document.getElementById('loginMenuItem').style.display=logged?'none':'block'; document.getElementById('logoutMenuItem').style.display=logged?'block':'none'; let isAdmin=currentUser?.isAdmin; document.getElementById('adminIcon').style.display=isAdmin?'block':'none'; document.getElementById('adminMenuItem').style.display=isAdmin?'block':'none'; }
+        function handleUserLogin(){ 
+            let un=document.getElementById('loginUsername').value.trim(), pw=document.getElementById('loginPassword').value; 
+            let user=users.find(u=>u.username===un && u.password===pw); 
+            if(user){ 
+                currentUser=user; 
+                localStorage.setItem('iptv_current_user',JSON.stringify(user)); 
+                updateAuthUI(); 
+                closeLoginModal(); 
+                loadFavorites(); 
+                resetMainDisplay(); 
+            } else { 
+                alert("Incorrect username or password. Please try again."); 
+                document.getElementById('loginPassword').value = '';
+            } 
+        }
+        function updateAuthUI(){
+            let logged = currentUser && currentUser.username !== 'guest';
+            let isAdmin = currentUser?.isAdmin;
+            document.getElementById('loginMenuItem').style.display = logged ? 'none' : 'block';
+            document.getElementById('logoutMenuItem').style.display = logged ? 'block' : 'none';
+            document.getElementById('adminMenuItem').style.display = isAdmin ? 'block' : 'none';
+            // Settings sheet
+            document.getElementById('settingsAdminBlock').style.display = isAdmin ? 'block' : 'none';
+            document.getElementById('settingsUserLabel').textContent = logged ? currentUser.username + (isAdmin ? ' (Admin)' : '') : 'Not logged in';
+            document.getElementById('settingsUserSub').textContent = logged ? 'Signed in' : 'Tap to sign in';
+            document.getElementById('settingsAuthBtn').textContent = logged ? 'Logout' : 'Login';
+            // Hide login icon from topbar when logged in
+            document.getElementById('userIconBtn').style.display = logged ? 'none' : 'flex';
+        }
         function openLoginModal(){ document.getElementById('loginModal').classList.add('active'); closeSidebar(); }
         function closeLoginModal(){ document.getElementById('loginModal').classList.remove('active'); }
         function logout(){ currentUser={username:'guest',isAdmin:false}; localStorage.setItem('iptv_current_user',JSON.stringify(currentUser)); updateAuthUI(); favorites=[]; displayFavorites(); resetMainDisplay(); closeSidebar(); }
